@@ -6,18 +6,16 @@ import { Select } from 'src/ui/select';
 import { RadioGroup } from 'src/ui/radio-group';
 import * as constants from '../../constants/articleProps';
 import { useState, useRef, SyntheticEvent } from 'react';
-
-export const ArticleParamsForm = () => {
+type TArticleParamsForm = {
+	onChange: (options: constants.ArticleStateType) => void;
+};
+export const ArticleParamsForm = (props: TArticleParamsForm) => {
+	const { onChange } = props;
 	const refAside = useRef<HTMLDivElement | null>(null);
-	const initialState = {
-		fontFamily: constants.defaultArticleState.fontFamilyOption,
-		fontSize: constants.defaultArticleState.fontSizeOption,
-		fontColor: constants.defaultArticleState.fontColor,
-		backgroundColor: constants.defaultArticleState.backgroundColor,
-		contentWidth: constants.defaultArticleState.contentWidth,
-	};
+
 	const [isOpen, setIsOpen] = useState(false);
-	const [formState, setFormState] = useState({ ...initialState });
+	const [formState, setFormState] = useState(constants.defaultArticleState);
+
 	const handleToggleSideBar = () => {
 		setIsOpen(!isOpen);
 	};
@@ -26,12 +24,14 @@ export const ArticleParamsForm = () => {
 		setFormState({ ...formState, [name]: select });
 	};
 
-	const handleFormSubmit = () => {
-		console.log(formState);
+	const handleFormSubmit = (event: SyntheticEvent) => {
+		event.preventDefault();
+		onChange(formState);
 	};
 
 	const handleFormClear = () => {
-		setFormState(initialState);
+		setFormState(constants.defaultArticleState);
+		onChange(constants.defaultArticleState);
 	};
 	return (
 		<>
@@ -39,23 +39,19 @@ export const ArticleParamsForm = () => {
 			<aside
 				className={`${styles.container} ${isOpen ? styles.container_open : ''}`}
 				ref={refAside}>
-				<form
-					className={styles.form}
-					onSubmit={(event: SyntheticEvent) => {
-						event.preventDefault();
-					}}>
+				<form className={styles.form} onSubmit={handleFormSubmit}>
 					<Select
-						selected={formState.fontFamily}
+						selected={formState.fontFamilyOption}
 						options={constants.fontFamilyOptions}
 						title='Шрифт'
-						onChange={(select) => handleChange('fontFamily', select)}
+						onChange={(select) => handleChange('fontFamilyOption', select)}
 					/>
 					<RadioGroup
-						selected={formState.fontSize}
-						name='fontSize'
+						selected={formState.fontSizeOption}
+						name='fontSizeOption'
 						options={constants.fontSizeOptions}
 						title='Размер шрифта'
-						onChange={(select) => handleChange('fontSize', select)}
+						onChange={(select) => handleChange('fontSizeOption', select)}
 					/>
 					<Select
 						selected={formState.fontColor}
@@ -83,12 +79,7 @@ export const ArticleParamsForm = () => {
 							type='clear'
 							onClick={handleFormClear}
 						/>
-						<Button
-							title='Применить'
-							htmlType='submit'
-							type='apply'
-							onClick={handleFormSubmit}
-						/>
+						<Button title='Применить' htmlType='submit' type='apply' />
 					</div>
 				</form>
 			</aside>
