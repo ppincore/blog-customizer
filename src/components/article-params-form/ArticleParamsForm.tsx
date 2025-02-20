@@ -4,6 +4,7 @@ import { Button } from 'src/ui/button';
 import { Separator } from 'src/ui/separator/Separator';
 import { Select } from 'src/ui/select';
 import { RadioGroup } from 'src/ui/radio-group';
+import { Text } from 'src/ui/text';
 import {
 	ArticleStateType,
 	defaultArticleState,
@@ -78,6 +79,9 @@ export const ArticleParamsForm = ({
 					className={styles.form}
 					onSubmit={handleFormSubmit}
 					onReset={handleFormClear}>
+					<Text as='h2' size={31} weight={800} uppercase>
+						Задайте параметры
+					</Text>
 					<Select
 						selected={formState.fontFamilyOption}
 						options={fontFamilyOptions}
