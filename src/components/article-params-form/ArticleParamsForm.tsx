@@ -15,7 +15,8 @@ import {
 	backgroundColors,
 	contentWidthArr,
 } from '../../constants/articleProps';
-import { useState, useRef, FormEvent, useEffect } from 'react';
+import { useState, useRef, FormEvent } from 'react';
+import { useOutsideClickClose } from 'src/ui/select/hooks/useOutsideClickClose';
 import clsx from 'clsx';
 
 type TArticleParamsForm = {
@@ -31,18 +32,6 @@ export const ArticleParamsForm = ({
 
 	const [isOpen, setIsOpen] = useState(false);
 	const [formState, setFormState] = useState(articleState);
-
-	const handleCloseSidebarOutiside = (event: MouseEvent) => {
-		const { target } = event;
-		if (
-			refAside.current &&
-			target instanceof Node &&
-			!refAside.current.contains(target)
-		) {
-			setIsOpen(!isOpen);
-			console.log('outside', isOpen);
-		}
-	};
 
 	const handleToggleSideBar = () => {
 		setIsOpen(!isOpen);
@@ -61,12 +50,12 @@ export const ArticleParamsForm = ({
 		setArticleState(defaultArticleState);
 	};
 
-	useEffect(() => {
-		document.addEventListener('mousedown', handleCloseSidebarOutiside);
-		return () => {
-			document.removeEventListener('mousedown', handleCloseSidebarOutiside);
-		};
-	}, [isOpen]);
+	useOutsideClickClose({
+		isOpen,
+		rootRef: refAside,
+		onChange: () => handleChange,
+		onClose: handleToggleSideBar,
+	});
 
 	return (
 		<>
