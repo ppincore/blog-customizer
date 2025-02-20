@@ -43,6 +43,7 @@ export const ArticleParamsForm = ({
 			console.log('outside', isOpen);
 		}
 	};
+
 	const handleToggleSideBar = () => {
 		setIsOpen(!isOpen);
 	};
